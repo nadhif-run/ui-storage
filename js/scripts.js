@@ -1,11 +1,11 @@
 // =============================
-// API CONFIG storageFreeText
+// API CONFIG handleFileSelect
 // =============================
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
 
-let rom = 0
-let maxRom = 0
+let storageStats = {unit:"Bita", rom: 0, maxRom: 6 * 1024 * 1024 * 1024 }; // Nilai default
+
 // =============================
 // API SERVICE (FIXED)
 // =============================
@@ -18,8 +18,7 @@ const Api = {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const getData = await response.json();
-    rom = getData.rom
-    maxRom = getData.max
+    storageStats = getData;
   },
 
   async storage(subpath) {
@@ -319,10 +318,10 @@ function render() {
   document.getElementById('itemCount').textContent = `${visible.length} item`;
 
   // Storage
-  const pct = Math.min((rom / maxRom) * 100, 100);
+  const pct = Math.min((storageStats.rom / storageStats.maxRom) * 100, 100);
   document.getElementById('storageFill').style.width = pct + '%';
-  document.getElementById('storageText').textContent = `${formatSize(rom)} / ${formatSize(maxRom)}`;
-  document.getElementById('storageFreeText').textContent = `${formatSize(maxRom - rom)} tersedia`;
+  document.getElementById('storageText').textContent = `${formatSize(storageStats.rom)} / ${formatSize(storageStats.maxRom)}`;
+  document.getElementById('storageFreeText').textContent = `${formatSize(storageStats.maxRom - storageStats.rom)} tersedia`;
 
   // Selected status
   const selCount = selectedIds.size;
@@ -615,7 +614,7 @@ function ctxDetail() {
   document.getElementById('detailModal').classList.add('show');
 }
 
-async function ctxDelete() {
+async function handleFileSelect() {
   const idsToDelete = [...selectedIds];
 
   for (const id of idsToDelete) {
@@ -633,6 +632,8 @@ async function ctxDelete() {
 
   showToast(`${selectedIds.size} item dihapus`);
   selectedIds.clear();
+
+  await Api.capacity()
   loadFiles(currentPath); // Refresh data
 }
 
@@ -718,7 +719,8 @@ async function handleFileSelect(input) {
   try {
     const result = await Api.upload(formData);
     showToast(`Berhasil mengunggah ${result.filename}`);
-
+    await Api.capacity()
+    
     // Pastikan fungsi-fungsi ini dipanggil DI DALAM try block setelah upload sukses
     if (typeof loadFiles === 'function') loadFiles(currentPath);
     closeModal('uploadModal');
@@ -992,6 +994,7 @@ async function startApp() {
     // TAMBAHKAN await di sini!
     await root(); 
     
+    await Api.capacity()
     // Sekarang ROOT_PATH sudah pasti terisi email user
     await loadFiles(ROOT_PATH);
 
