@@ -4,17 +4,17 @@
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
 
-let storageStats = {unit:"Bita", rom: 0, max: 1 }; // Nilai default
+let storageStats = { unit: "Bita", rom: 0, max: 1 }; // Nilai default
 
 // =============================
 // API SERVICE (FIXED)
 // =============================
 const Api = {
-  async capacity(){
+  async capacity() {
     const response = await fetch(`${API_BASE}/capacity`, {
       method: "GET",
-      credentials: "include", 
-    }) 
+      credentials: "include",
+    })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const getData = await response.json();
@@ -25,7 +25,7 @@ const Api = {
     // subpath harus di-encode jika mengandung spasi/karakter khusus loadFiles
     const response = await fetch(`${API_BASE}/browse/${encodeURIComponent(subpath)}`, {
       method: "GET",
-      credentials: "include", 
+      credentials: "include",
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     return await response.json();
@@ -81,8 +81,42 @@ const Api = {
 
   // FIXED: Menambahkan parameter subpath yang sebelumnya hilang
   async view(subpath) {
+    const type = subpath.split('.').pop().toLowerCase();
     const fileUrl = `${API_BASE}/view/${encodeURIComponent(subpath)}`;
-    window.open(fileUrl, '_blank');
+    // window.open(fileUrl, '_blank');
+    const previewModal = document.getElementById('previewModal');
+    const previewBody = document.getElementById('previewBody');
+    const previewTitle = document.getElementById('previewTitle');
+
+    // Tampilkan Modal & Reset Konten
+    previewModal.classList.add('show');
+    previewTitle.textContent = subpath.split('/').pop();
+    previewBody.innerHTML = '<div style="text-align:center; padding:50px;">⏳ Sedang memuat konten...</div>';
+
+    try {
+      const response = await fetch(fileUrl, { credentials: "include" });
+      const arrayBuffer = await response.arrayBuffer();
+
+      if (type === 'docx') {
+        // Render Word ke HTML
+        const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+        previewBody.innerHTML = `<div class="docx-render">${result.value}</div>`;
+      }
+      else if (type === 'xlsx' || type === 'xls') {
+        // Render Excel ke Tabel
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const htmlTable = XLSX.utils.sheet_to_html(firstSheet);
+        previewBody.innerHTML = `<div class="table-responsive">${htmlTable}</div>`;
+      }
+      else {
+        // Jika format lain (seperti PDF atau Gambar), buka di tab baru saja
+        closeModal('previewModal');
+        window.open(fileUrl, '_blank');
+      }
+    } catch (err) {
+      previewBody.innerHTML = `<div style="color:red; text-align:center;">❌ Gagal memuat file: ${err.message}</div>`;
+    }
   },
 
   async download(subpath) {
@@ -125,12 +159,12 @@ let files = [];
 // Tambahkan state global untuk path
 
 let ROOT_PATH = "";
-let currentPath = ROOT_PATH; 
+let currentPath = ROOT_PATH;
 
 async function root() {
   const userData = await getUserEmail();
   ROOT_PATH = userData.email;
-  currentPath = ROOT_PATH; 
+  currentPath = ROOT_PATH;
 }
 
 
@@ -541,7 +575,7 @@ async function doRename() {
   const file = files.find(f => f.id === contextTarget);
   const newName = document.getElementById('renameInput').value.trim();
   if (!newName || !file) return;
-  
+
   out = await Api.rename(currentPath, file.name, newName)
   file.name = newName;
   closeModal('renameModal');
@@ -708,7 +742,7 @@ async function handleFileSelect(input) {
     const result = await Api.upload(formData);
     showToast(`Berhasil mengunggah ${result.filename}`);
     await Api.capacity()
-    
+
     // Pastikan fungsi-fungsi ini dipanggil DI DALAM try block setelah upload sukses
     if (typeof loadFiles === 'function') loadFiles(currentPath);
     closeModal('uploadModal');
@@ -980,8 +1014,8 @@ handleCtxMenu = function (e, id) {
 async function startApp() {
   try {
     // TAMBAHKAN await di sini!
-    await root(); 
-    
+    await root();
+
     await Api.capacity()
     // Sekarang ROOT_PATH sudah pasti terisi email user
     await loadFiles(ROOT_PATH);
@@ -1015,7 +1049,7 @@ Object.assign(window, {
   filterByType,
   mobileNav,
   mobileCat,
-  
+
   // Actions
   createFolder,
   openNewFolderModal,
@@ -1023,12 +1057,12 @@ Object.assign(window, {
   handleFileSelect,
   triggerFileInput,
   closeModal,
-  
+
   // File & Folder Logic
   handleDblClick,
   handleClick,
   handleCtxMenu,
-  
+
   // Context Menu Actions
   ctxOpen,
   ctxRename,
@@ -1038,7 +1072,7 @@ Object.assign(window, {
   ctxDetail,
   ctxDelete,
   doRename,
-  
+
   // UI Controls
   toggleSidebar,
   closeSidebar,
@@ -1049,7 +1083,7 @@ Object.assign(window, {
   setView,
   sortBy,
   handleSearch,
-  
+
   // Drag n Drop
   handleDragOver,
   handleDragLeave,
