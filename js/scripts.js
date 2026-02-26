@@ -9,7 +9,7 @@ const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix
 // =============================
 const Api = {
   async capacity(){
-    const response = await fetch(`${API_AUTH}/capacity`, {
+    const response = await fetch(`${API_BASE}/capacity`, {
       method: "GET",
       credentials: "include", 
     }) 
