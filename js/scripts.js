@@ -319,7 +319,7 @@ function render() {
 
   // Storage
   const pct = Math.min((storageStats.rom / storageStats.maxRom) * 100, 100);
-  document.getElementById('storageFill').style.width = pct + '%';
+  document.getElementById('storageFill').style.width = isNaN(pct) ? '0%' : pct + '%';
   document.getElementById('storageText').textContent = `${formatSize(storageStats.rom)} / ${formatSize(storageStats.maxRom)}`;
   document.getElementById('storageFreeText').textContent = `${formatSize(storageStats.maxRom - storageStats.rom)} tersedia`;
 
