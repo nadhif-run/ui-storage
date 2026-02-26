@@ -1,5 +1,5 @@
 // =============================
-// API CONFIG handleFileSelect
+// API CONFIG ctx
 // =============================
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
@@ -614,7 +614,7 @@ function ctxDetail() {
   document.getElementById('detailModal').classList.add('show');
 }
 
-async function handleFileSelect() {
+async function ctxDelete() {
   const idsToDelete = [...selectedIds];
 
   for (const id of idsToDelete) {
