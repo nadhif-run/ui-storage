@@ -4,7 +4,7 @@
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
 
-let storageStats = {unit:"Bita", rom: 0, maxRom: 6 * 1024 * 1024 * 1024 }; // Nilai default
+let storageStats = {unit:"Bita", rom: 0, maxRom: 1 }; // Nilai default
 
 // =============================
 // API SERVICE (FIXED)
