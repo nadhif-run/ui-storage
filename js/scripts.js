@@ -85,7 +85,7 @@ const Api = {
     
     // Cek apakah file termasuk dokumen Office
     const docExtensions = ['docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt'];
-    const extension = type.toLowerCase();
+    const extension = subpath.split('.').pop().toLowerCase();
 
     if (docExtensions.includes(extension)) {
       // Gunakan Google Viewer untuk dokumen
