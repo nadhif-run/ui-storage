@@ -4,6 +4,8 @@
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
 
+let rom = 0
+let maxRom = 0
 // =============================
 // API SERVICE (FIXED)
 // =============================
@@ -16,7 +18,8 @@ const Api = {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const getData = await response.json();
-    return {"rom": getData.rom, "maxRom": getData.max}
+    rom = getData.rom
+    maxRom = getData.max
   },
 
   async storage(subpath) {
@@ -316,14 +319,10 @@ function render() {
   document.getElementById('itemCount').textContent = `${visible.length} item`;
 
   // Storage
-  let getStorage = Api.capacity()
-  const totalSize = getStorage.rom // files.filter(f => !f.trash && f.type !== 'folder').reduce((s, f) => s + f.size, 0);
-  const maxStorage = getStorage.maxRom // 6 * 1024 * 1024 * 1024;
-  console.log(`totalSize = ${totalSize}, \nmaxStorage = ${maxStorage}`)
-  const pct = Math.min((totalSize / maxStorage) * 100, 100);
+  const pct = Math.min((rom / maxRom) * 100, 100);
   document.getElementById('storageFill').style.width = pct + '%';
-  document.getElementById('storageText').textContent = `${formatSize(totalSize)} / 6 GB`;
-  document.getElementById('storageFreeText').textContent = `${formatSize(maxStorage - totalSize)} tersedia`;
+  document.getElementById('storageText').textContent = `${formatSize(rom)} / ${formatSize(maxRom)}`;
+  document.getElementById('storageFreeText').textContent = `${formatSize(maxRom - rom)} tersedia`;
 
   // Selected status
   const selCount = selectedIds.size;
