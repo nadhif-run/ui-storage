@@ -39,7 +39,7 @@ body {
 .app {
     display: grid;
     grid-template-rows: 56px 1fr;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 280px 1fr;
     height: 100vh;
     gap: 0;
 }
