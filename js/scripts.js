@@ -1,5 +1,5 @@
 // =============================
-// API CONFIG sheetAction
+// API CONFIG mobileNav
 // =============================
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
