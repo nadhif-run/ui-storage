@@ -112,10 +112,15 @@ let files = [];
 // LOGIC IMPROVEMENTS
 // =============================
 // Tambahkan state global untuk path
-const userData = await getUserEmail();
-export const ROOT_PATH = userData.email;
 
-let currentPath = ROOT_PATH
+let ROOT_PATH = "";
+
+async function root() {
+  const userData = await getUserEmail();
+  ROOT_PATH = userData.email;
+}
+
+let currentPath = ROOT_PATH; 
 
 async function loadFiles(path = ROOT_PATH) {
   try {
@@ -959,6 +964,7 @@ handleCtxMenu = function (e, id) {
 // ============================
 // INIT
 // ============================
+root()
 loadFiles(ROOT_PATH);
 
 // Menetapkan breakpoint (768px)
