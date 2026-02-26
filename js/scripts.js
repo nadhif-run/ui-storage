@@ -89,7 +89,7 @@ const Api = {
 
     if (docExtensions.includes(extension)) {
       // Gunakan Google Viewer untuk dokumen
-       const viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(fileUrl)}&embedded=true`;
+       const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
        window.open(viewerUrl, '_blank');
     } else {
       // Untuk gambar atau PDF, buka langsung
