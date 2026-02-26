@@ -108,28 +108,6 @@ const Api = {
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         const htmlTable = XLSX.utils.sheet_to_html(firstSheet);
         previewBody.innerHTML = `<div class="table-responsive">${htmlTable}</div>`;
-      }
-      else if (type === 'pptx') {
-        const previewBody = document.getElementById('previewBody');
-        previewBody.innerHTML = '<div id="pptx-render"></div>';
-
-        setTimeout(() => {
-          if (typeof $.fn.pptxToHtml === "function") {
-            $("#pptx-render").pptxToHtml({
-              pptxFileUrl: fileUrl, // Menggunakan URL dari FastAPI kamu
-              fileInputId: null,
-              slidesScale: "50%", // Sesuaikan skala agar pas di layar laptop 32-bit
-              slideMode: true,
-              keyBoardShortCut: true,
-              mediaProcess: true,
-              renderOrder: [1, 2, 3], // Urutan render elemen slide
-              errorText: "Gagal memproses presentasi",
-              processText: "Sedang merender slide...",
-            })
-          } else {
-            previewBody.innerHTML = '<div style="color:red; text-align:center;">❌ Library PPTXjs belum siap. Silakan refresh.</div>';
-          }
-        }, 300);
       } else {
         // Jika format lain (seperti PDF atau Gambar), buka di tab baru saja
         closeModal('previewModal');
