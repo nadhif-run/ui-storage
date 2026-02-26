@@ -114,13 +114,14 @@ let files = [];
 // Tambahkan state global untuk path
 
 let ROOT_PATH = "";
+let currentPath = ROOT_PATH; 
 
 async function root() {
   const userData = await getUserEmail();
   ROOT_PATH = userData.email;
+  currentPath = ROOT_PATH; 
 }
 
-let currentPath = ROOT_PATH; 
 
 async function loadFiles(path = ROOT_PATH) {
   try {
@@ -964,21 +965,80 @@ handleCtxMenu = function (e, id) {
 // ============================
 // INIT
 // ============================
-root()
-loadFiles(ROOT_PATH);
+async function startApp() {
+  try {
+    // TAMBAHKAN await di sini!
+    await root(); 
+    
+    // Sekarang ROOT_PATH sudah pasti terisi email user
+    await loadFiles(ROOT_PATH);
 
-// Menetapkan breakpoint (768px)
-const mediaQuery = window.matchMedia('(min-width: 768px)');
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    function handleTabletChange(e) {
+      if (e.matches) {
+        // Program dijalankan jika layar 768px atau lebih
+        showToast('💡 Ctrl+A pilih semua, Del hapus, Ctrl+F cari');
+      }
+    }
 
-function handleTabletChange(e) {
-  if (e.matches) {
-    // Program dijalankan jika layar 768px atau lebih
-    showToast('💡 Ctrl+A pilih semua, Del hapus, Ctrl+F cari');
+    // Jalankan saat load pertama kali
+    handleTabletChange(mediaQuery);
+
+    // Pantau perubahan ukuran layar secara real-time
+    mediaQuery.addEventListener('change', handleTabletChange);
+  } catch (err) {
+    console.error("Gagal inisialisasi aplikasi:", err);
   }
 }
 
-// Jalankan saat load pertama kali
-handleTabletChange(mediaQuery);
+startApp();
 
-// Pantau perubahan ukuran layar secara real-time
-mediaQuery.addEventListener('change', handleTabletChange);
+// ================================================
+// EXPOSE TO GLOBAL (Penting untuk onclick HTML)
+// ================================================
+Object.assign(window, {
+  // Navigasi & Filter
+  navigate,
+  filterByType,
+  mobileNav,
+  mobileCat,
+  
+  // Actions
+  createFolder,
+  openNewFolderModal,
+  openUploadModal,
+  handleFileSelect,
+  triggerFileInput,
+  closeModal,
+  
+  // File & Folder Logic
+  handleDblClick,
+  handleClick,
+  handleCtxMenu,
+  
+  // Context Menu Actions
+  ctxOpen,
+  ctxRename,
+  ctxStar,
+  ctxCopy,
+  ctxDownload,
+  ctxDetail,
+  ctxDelete,
+  doRename,
+  
+  // UI Controls
+  toggleSidebar,
+  closeSidebar,
+  toggleFab,
+  closeFab,
+  sheetAction,
+  closeSheet,
+  setView,
+  sortBy,
+  handleSearch,
+  
+  // Drag n Drop
+  handleDragOver,
+  handleDragLeave,
+  handleDrop
+});
