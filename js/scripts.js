@@ -82,19 +82,7 @@ const Api = {
   // FIXED: Menambahkan parameter subpath yang sebelumnya hilang
   async view(subpath) {
     const fileUrl = `${API_BASE}/view/${encodeURIComponent(subpath)}`;
-    
-    // Cek apakah file termasuk dokumen Office
-    const docExtensions = ['docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt'];
-    const extension = subpath.split('.').pop().toLowerCase();
-
-    if (docExtensions.includes(extension)) {
-      // Gunakan Google Viewer untuk dokumen
-       const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
-       window.open(viewerUrl, '_blank');
-    } else {
-      // Untuk gambar atau PDF, buka langsung
-      window.open(fileUrl, '_blank');
-    }
+    window.open(fileUrl, '_blank');
   },
 
   async download(subpath) {
