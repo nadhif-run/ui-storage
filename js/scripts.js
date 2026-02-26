@@ -1,5 +1,5 @@
 // =============================
-// API CONFIG mobileNav
+// API CONFIG storageFreeText
 // =============================
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
@@ -8,6 +8,17 @@ const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix
 // API SERVICE (FIXED)
 // =============================
 const Api = {
+  async capacity(){
+    const response = await fetch(`${API_AUTH}/capacity`, {
+      method: "GET",
+      credentials: "include", 
+    }) 
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    getData = await response.json();
+    return {"rom": getData.rom, "maxRom": getData.max}
+  },
+
   async storage(subpath) {
     // subpath harus di-encode jika mengandung spasi/karakter khusus loadFiles
     const response = await fetch(`${API_BASE}/browse/${encodeURIComponent(subpath)}`, {
@@ -67,11 +78,21 @@ const Api = {
   },
 
   // FIXED: Menambahkan parameter subpath yang sebelumnya hilang
-  async view(subpath) {
-    // const response = await fetch(`${API_BASE}/view/${encodeURIComponent(subpath)}`);
-    // if (!response.ok) throw new Error("Gagal view file");
-    // return await response.json();
-    window.open(`${API_BASE}/view/${encodeURIComponent(subpath)}`, '_blank');
+  async view(subpath, type) {
+    const fileUrl = `${API_BASE}/view/${encodeURIComponent(subpath)}`;
+    
+    // Cek apakah file termasuk dokumen Office
+    const docExtensions = ['docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt'];
+    const extension = type.toLowerCase();
+
+    if (docExtensions.includes(extension)) {
+      // Gunakan Google Viewer untuk dokumen
+      const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+      window.open(viewerUrl, '_blank');
+    } else {
+      // Untuk gambar atau PDF, buka langsung
+      window.open(fileUrl, '_blank');
+    }
   },
 
   async download(subpath) {
@@ -295,8 +316,9 @@ function render() {
   document.getElementById('itemCount').textContent = `${visible.length} item`;
 
   // Storage
-  const totalSize = files.filter(f => !f.trash && f.type !== 'folder').reduce((s, f) => s + f.size, 0);
-  const maxStorage = 6 * 1024 * 1024 * 1024;
+  let getStorage = Api.capacity()
+  const totalSize = getStorage.rom // files.filter(f => !f.trash && f.type !== 'folder').reduce((s, f) => s + f.size, 0);
+  const maxStorage = getStorage.maxRom // 6 * 1024 * 1024 * 1024;
   const pct = Math.min((totalSize / maxStorage) * 100, 100);
   document.getElementById('storageFill').style.width = pct + '%';
   document.getElementById('storageText').textContent = `${formatSize(totalSize)} / 6 GB`;
