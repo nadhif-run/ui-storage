@@ -1,5 +1,5 @@
 // =============================
-// API CONFIG storageText
+// API CONFIG
 // =============================
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
@@ -109,7 +109,22 @@ const Api = {
         const htmlTable = XLSX.utils.sheet_to_html(firstSheet);
         previewBody.innerHTML = `<div class="table-responsive">${htmlTable}</div>`;
       }
-      else {
+      else if (type === 'pptx') {
+        const previewBody = document.getElementById('previewBody');
+        previewBody.innerHTML = '<div id="pptx-render"></div>';
+
+        $("#pptx-render").pptxToHtml({
+          pptxFileUrl: fileUrl, // Menggunakan URL dari FastAPI kamu
+          fileInputId: null,
+          slidesScale: "50%", // Sesuaikan skala agar pas di layar laptop 32-bit
+          slideMode: true,
+          keyBoardShortCut: true,
+          mediaProcess: true,
+          renderOrder: [1, 2, 3], // Urutan render elemen slide
+          errorText: "Gagal memproses presentasi",
+          processText: "Sedang merender slide...",
+        })
+      } else {
         // Jika format lain (seperti PDF atau Gambar), buka di tab baru saja
         closeModal('previewModal');
         window.open(fileUrl, '_blank');
