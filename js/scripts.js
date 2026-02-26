@@ -1,10 +1,10 @@
 // =============================
-// API CONFIG ctx
+// API CONFIG storageText
 // =============================
 const API_BASE = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/storage";
 const API_AUTH = "https://semioratorical-unbreakably-dacia.ngrok-free.dev/Thorix/authy";
 
-let storageStats = {unit:"Bita", rom: 0, maxRom: 1 }; // Nilai default
+let storageStats = {unit:"Bita", rom: 0, max: 1 }; // Nilai default
 
 // =============================
 // API SERVICE (FIXED)
@@ -318,10 +318,10 @@ function render() {
   document.getElementById('itemCount').textContent = `${visible.length} item`;
 
   // Storage
-  const pct = Math.min((storageStats.rom / storageStats.maxRom) * 100, 100);
+  const pct = Math.min((storageStats.rom / storageStats.max) * 100, 100);
   document.getElementById('storageFill').style.width = isNaN(pct) ? '0%' : pct + '%';
-  document.getElementById('storageText').textContent = `${formatSize(storageStats.rom)} / ${formatSize(storageStats.maxRom)}`;
-  document.getElementById('storageFreeText').textContent = `${formatSize(storageStats.maxRom - storageStats.rom)} tersedia`;
+  document.getElementById('storageText').textContent = `${formatSize(storageStats.rom)} / ${formatSize(storageStats.max)}`;
+  document.getElementById('storageFreeText').textContent = `${formatSize(storageStats.max - storageStats.rom)} tersedia`;
 
   // Selected status
   const selCount = selectedIds.size;
