@@ -84,13 +84,13 @@ const Api = {
     const fileUrl = `${API_BASE}/view/${encodeURIComponent(subpath)}`;
     
     // Cek apakah file termasuk dokumen Office
-    // const docExtensions = ['docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt'];
-    // const extension = subpath.split('.').pop().toLowerCase();
+    const docExtensions = ['docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt'];
+    const extension = subpath.split('.').pop().toLowerCase();
 
-    // if (docExtensions.includes(extension)) {
+    if (docExtensions.includes(extension)) {
       // Gunakan Google Viewer untuk dokumen
-      // const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
-      // window.open(viewerUrl, '_blank');
+       const viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(fileUrl)}&embedded=true`;
+       window.open(viewerUrl, '_blank');
     // } else {
       // Untuk gambar atau PDF, buka langsung
     window.open(fileUrl, '_blank');
