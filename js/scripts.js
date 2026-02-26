@@ -91,10 +91,10 @@ const Api = {
       // Gunakan Google Viewer untuk dokumen
        const viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(fileUrl)}&embedded=true`;
        window.open(viewerUrl, '_blank');
-    // } else {
+    } else {
       // Untuk gambar atau PDF, buka langsung
-    window.open(fileUrl, '_blank');
-    // }
+      window.open(fileUrl, '_blank');
+    }
   },
 
   async download(subpath) {
