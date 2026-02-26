@@ -80,7 +80,7 @@ const Api = {
   },
 
   // FIXED: Menambahkan parameter subpath yang sebelumnya hilang
-  async view(subpath, type) {
+  async view(subpath) {
     const fileUrl = `${API_BASE}/view/${encodeURIComponent(subpath)}`;
     
     // Cek apakah file termasuk dokumen Office
