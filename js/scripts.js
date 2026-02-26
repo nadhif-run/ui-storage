@@ -15,7 +15,7 @@ const Api = {
     }) 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    getData = await response.json();
+    const getData = await response.json();
     return {"rom": getData.rom, "maxRom": getData.max}
   },
 
