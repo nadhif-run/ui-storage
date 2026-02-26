@@ -319,6 +319,7 @@ function render() {
   let getStorage = Api.capacity()
   const totalSize = getStorage.rom // files.filter(f => !f.trash && f.type !== 'folder').reduce((s, f) => s + f.size, 0);
   const maxStorage = getStorage.maxRom // 6 * 1024 * 1024 * 1024;
+  console.log(`totalSize = ${totalSize}, \nmaxStorage = ${maxStorage}`)
   const pct = Math.min((totalSize / maxStorage) * 100, 100);
   document.getElementById('storageFill').style.width = pct + '%';
   document.getElementById('storageText').textContent = `${formatSize(totalSize)} / 6 GB`;
